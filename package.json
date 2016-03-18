@@ -29,7 +29,7 @@
   },
   "scripts": {
     "postinstall": "npm install -g mocha istanbul uglify-js docco chokidar-cli",
-    "watch-tests": "chokidar 'tests/*.coffee' -c 'npm test'",
+    "watch-tests": "chokidar 'tests/*.coffee' 'lib/*.js' -c 'npm test'",
     "watch-doc": "chokidar 'src/*.js' -c './node_modules/docco/bin/docco -o doc -t ./docco-theme/docco.jst -c ./docco-theme/docco.css src/*.js'",
     "watch-js": "chokidar 'src/*.js' -c 'uglify -s src/*.js -o lib/borax.min.js'",
     "test": "istanbul cover --print both node_modules/mocha/bin/_mocha -- --compilers coffee:coffee-script/register --reporter spec tests"
