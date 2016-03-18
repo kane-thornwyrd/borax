@@ -1,15 +1,15 @@
 {
   "name": "borax",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Primitive flux in Backbone",
   "main": "lib/borax.min.js",
   "homepage": "https://github.com/kane-thornwyrd/borax.js",
   "bugs": {
-    "url": "https://github.com/kane-thornwyrd/etho.js/issues"
+    "url": "https://github.com/kane-thornwyrd/borax.js/issues"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/kane-thornwyrd/etho.js.git"
+    "url": "https://github.com/kane-thornwyrd/borax.js.git"
   },
   "dependencies": {
     "backbone": "^1.3.2",
