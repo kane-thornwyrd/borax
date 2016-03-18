@@ -21,9 +21,7 @@
 }(this, function (_, $, Backbone) {
 'use strict';
 
-var _inst;
-
-var Dispatcher = function Dispatcher(){};
+var _inst, Dispatcher = function Dispatcher(){};
 
 _.extend(Dispatcher.prototype, Backbone.Events, {});
 
