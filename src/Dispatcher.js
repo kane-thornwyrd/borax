@@ -2,7 +2,7 @@
 (function (root, factory) {
     // AMD.
   if (typeof define === 'function' && define.amd) {
-    define(['underscore','jquery','backbone','bluebird'], function (_, $, Backbone, bluebird) {
+    define(['underscore','jquery','backbone'], function (_, $, Backbone) {
         return factory(_, $, Backbone);
     });
     // Commonjs.
@@ -10,38 +10,24 @@
     var
       _ = require('underscore'),
       $ = require('jquery'),
-      Backbone = require('backbone'),
-      bluebird = require('bluebird')
+      Backbone = require('backbone')
     ;
 
-    exports = module.exports = factory(_, $, Backbone, bluebird);
+    exports = module.exports = factory(_, $, Backbone);
     // Browser globals.
   } else {
-    factory(_, $, Backbone, bluebird);
+    factory(_, $, Backbone);
   }
-}(this, function (_, $, Backbone, bluebird) {
+}(this, function (_, $, Backbone) {
 'use strict';
-
-  var defer = function defer() {
-    var resolve, reject;
-    var promise = new Promise(function() {
-        resolve = arguments[0];
-        reject  = arguments[1];
-    });
-    return {
-      resolve : resolve,
-      reject  : reject,
-      promise : promise
-    };
-  };
 
   var _inst, _store = {}, Dispatcher = function Dispatcher() {};
 
   _.extend(Dispatcher.prototype, Backbone.Events, {
 
   on: function(name, callback, context){
-  if(!_store[name]){
-      _store[name] = defer();
+    if(!_store[name]){
+      _store[name] = {};
     }
     Backbone.Events.on.apply(this, arguments);
     if(_store[name] === true){
@@ -59,7 +45,7 @@
 
   once: function(name, callback, context){
     if(!_store[name]){
-      _store[name] = defer();
+      _store[name] = {};
     }
     Backbone.Events.once.apply(this, arguments);
 
@@ -72,7 +58,8 @@
 
   });
 
-  module.exports = Backbone.Dispatcher = _inst ? _inst : (_inst = new Dispatcher());
+// Singleton
+  Backbone.Dispatcher = _inst ? _inst : (_inst = new Dispatcher());
 
 return Backbone.Dispatcher;
 
