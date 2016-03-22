@@ -1,6 +1,6 @@
 {
   "name": "borax",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "Primitive flux in Backbone",
   "main": "lib/borax.min.js",
   "homepage": "https://github.com/kane-thornwyrd/borax",
@@ -13,7 +13,6 @@
   },
   "dependencies": {
     "backbone": "^1.3.2",
-    "bluebird": "^3.3.4",
     "jquery": "^2.2.2",
     "underscore": "^1.8.3"
   },
