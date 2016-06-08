@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <title>Datastore</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
+  <link rel="stylesheet" media="all" href="docco.css" />
+</head>
+<body>
+  <div id="container">
+    <div id="background"></div>
+    
+      <ul id="jump_to">
+        <li>
+          <a class="large" href="javascript:void(0);">Jump To &hellip;</a>
+          <a class="small" href="javascript:void(0);">+</a>
+          <div id="jump_wrapper">
+          <div id="jump_page_wrapper">
+            <div id="jump_page">
+              
+                
+                <a class="source" href="borax.html">
+                  borax.js
+                </a>
+              
+                
+                <a class="source" href="datastore.html">
+                  datastore.js
+                </a>
+              
+            </div>
+          </div>
+        </li>
+      </ul>
+    
+    <ul class="sections">
+        
+        
+        
+        <li id="section-1">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-1">&#182;</a>
+              </div>
+              <h1 id="datastore">Datastore</h1>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> Immutable <span class="hljs-keyword">from</span> <span class="hljs-string">'immutable'</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-2">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-2">&#182;</a>
+              </div>
+              <p>Let’s assume that 100 entries are enougth history…</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> HISTORY_MAX_LENGTH = <span class="hljs-number">100</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-3">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-3">&#182;</a>
+              </div>
+              <p>Small static to save the singleton instance.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> _inst;
+
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Datastore</span> </span>{
+
+  <span class="hljs-keyword">constructor</span>(){</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-4">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-4">&#182;</a>
+              </div>
+              <p>That’s the heart of the beast: an array of immutables !</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">this</span>.history = [Immutable.Map()];
+    <span class="hljs-keyword">this</span>.reducers = {};
+    <span class="hljs-keyword">this</span>.cbs = [];
+  }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-5">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-5">&#182;</a>
+              </div>
+              <h2 id="registerreducer">registerReducer</h2>
+<p>Register a reducer</p>
+<ul>
+<li><strong>@param</strong>  {String} name of the reducer, incidentally also the name of the
+data it will reduce from the state.</li>
+<li><strong>@param</strong>  {Function} cb for the reducer.</li>
+<li><strong>@chainable</strong></li>
+</ul>
+<pre><code class="lang-js"> <span class="hljs-keyword">let</span> ds = Borax.Datastore;
+
+ ds.registerReducer(<span class="hljs-string">'foo'</span>,(state = {}, action)=&gt;{
+   <span class="hljs-keyword">switch</span>(action.type){
+     <span class="hljs-keyword">case</span> <span class="hljs-string">'START'</span>:
+       <span class="hljs-keyword">return</span> {start: <span class="hljs-built_in">Date</span>.now()};
+     <span class="hljs-keyword">case</span> <span class="hljs-string">'END'</span>:
+       <span class="hljs-keyword">return</span> {end: <span class="hljs-built_in">Date</span>.now()};
+     <span class="hljs-keyword">case</span> <span class="hljs-string">'RETRIEVED'</span>:
+       <span class="hljs-keyword">return</span> {data: data.message};
+     <span class="hljs-keyword">default</span>:
+       <span class="hljs-keyword">return</span> state;
+ });
+</code></pre>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  registerReducer(name, cb){
+    <span class="hljs-keyword">this</span>.reducers[name] = cb;
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+  }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-6">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-6">&#182;</a>
+              </div>
+              <h2 id="getstate">getState</h2>
+<p>Browse the state history</p>
+<ul>
+<li><strong>@param</strong>  {Number} away (optionnal) how far from the latest, default: 0</li>
+<li><strong>@return</strong> {Immutable.Map}      The state requested.</li>
+</ul>
+<pre><code class="lang-js"> <span class="hljs-keyword">let</span> ds = Borax.Datastore;
+
+ <span class="hljs-keyword">let</span> currentState = ds.getState();
+
+ <span class="hljs-keyword">let</span> antepenultimateState = ds.getState(<span class="hljs-number">2</span>);
+</code></pre>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  getState(away = <span class="hljs-number">0</span>){
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.history[<span class="hljs-keyword">this</span>.history.length<span class="hljs-number">-1</span>-away];
+  }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-7">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-7">&#182;</a>
+              </div>
+              <h2 id="dispatch">dispatch</h2>
+<p>Call all the reducers for them to alter the app state then forge the new one.</p>
+<p>Also garbage collect the history to avoid pseudo-“memory leak”.</p>
+<ul>
+<li><strong>@param</strong>  {[type]} action [description]</li>
+<li><strong>@chainable</strong></li>
+</ul>
+<pre><code class="lang-js"> <span class="hljs-keyword">let</span> ds = Borax.Datastore;
+
+ $.ajax(<span class="hljs-string">'exemple.com/data.json'</span>)
+   .then((data)=&gt;{
+     ds.dispatch(
+       <span class="hljs-built_in">require</span>(<span class="hljs-string">'../actions/foo/dataRetrieved'</span>)(data)
+     );
+   })
+ ;
+</code></pre>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  dispatch(action){</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-8">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-8">&#182;</a>
+              </div>
+              <p>Good exemple of getState use !</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">let</span> latestState = <span class="hljs-keyword">this</span>.getState();</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-9">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-9">&#182;</a>
+              </div>
+              <p>Obviously we push a new state to the history.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">this</span>.history.push(</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-10">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-10">&#182;</a>
+              </div>
+              <p>We won’t create a new state for each reducer called this way.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      latestState.withMutations((list) =&gt; {
+        <span class="hljs-keyword">for</span>(<span class="hljs-keyword">var</span> name <span class="hljs-keyword">in</span> <span class="hljs-keyword">this</span>.reducers){
+
+          <span class="hljs-keyword">var</span> latest = latestState.get(name) ? latestState.get(name).toJS() : {} ;
+
+          list.set(name, Immutable.Map(<span class="hljs-built_in">Object</span>.assign(latest, <span class="hljs-keyword">this</span>.reducers[name](latestState.get(name), action))));
+        }
+      })
+    );</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-11">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-11">&#182;</a>
+              </div>
+              <p>Here’s the primitive garbage collector.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span>(<span class="hljs-keyword">this</span>.history.length &gt; HISTORY_MAX_LENGTH) <span class="hljs-keyword">this</span>.history.shift();
+
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.trigger();
+  }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-12">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-12">&#182;</a>
+              </div>
+              <h2 id="onnewstate">onNewstate</h2>
+<ul>
+<li><strong>@param</strong>  {Function} cb to register as listener.</li>
+<li><strong>@return</strong> {Number}      id from the new listener.</li>
+</ul>
+<pre><code class="lang-js"> <span class="hljs-comment">//@ToDo</span>
+</code></pre>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  onNewstate(cb){
+    <span class="hljs-keyword">let</span> id = <span class="hljs-keyword">this</span>.cbs.length;
+    <span class="hljs-keyword">this</span>.cbs.push(cb);
+    <span class="hljs-keyword">return</span> id;
+  }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-13">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-13">&#182;</a>
+              </div>
+              <h2 id="offnewstate">offNewstate</h2>
+<ul>
+<li><strong>@param</strong>  {Number}  id from the callback to remove.</li>
+<li><p><strong>@return</strong> {Number}  new listener’s array length.</p>
+<pre><code class="lang-js"><span class="hljs-comment">//@ToDo</span>
+</code></pre>
+</li>
+</ul>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  offNewState(id){
+    <span class="hljs-keyword">if</span>(<span class="hljs-keyword">this</span>.cbs.length<span class="hljs-number">-1</span> &lt; id) <span class="hljs-keyword">this</span>.cbs.splice(id, <span class="hljs-number">1</span>);
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.cbs.length;
+  }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-14">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-14">&#182;</a>
+              </div>
+              <h2 id="trigger">trigger</h2>
+<ul>
+<li><strong>@chainable</strong></li>
+</ul>
+<pre><code class="lang-js"> <span class="hljs-comment">//@ToDo</span>
+</code></pre>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  trigger(){
+    <span class="hljs-keyword">let</span> state = <span class="hljs-keyword">this</span>.getState();
+    <span class="hljs-keyword">let</span> notify = (cb)=&gt;{
+      <span class="hljs-keyword">return</span> cb(state);
+    };
+    <span class="hljs-keyword">this</span>.cbs.every(notify);
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+  }
+}
+
+<span class="hljs-built_in">module</span>.exports = _inst = _inst ? _inst : <span class="hljs-keyword">new</span> Datastore();</pre></div></div>
+            
+        </li>
+        
+    </ul>
+  </div>
+</body>
+</html>
