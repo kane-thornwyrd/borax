@@ -1,6 +1,6 @@
 {
   "name": "borax",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "author": {
     "name": "Jean-cédric THEROND",
     "email": "jean.cedric.t@gmail.com"
@@ -28,8 +28,7 @@
     "watch:build": "chokidar 'src/*.js' -c 'npm run build'"
   },
   "dependencies": {
-    "immutable": "^3.8.1",
-    "babel-polyfill": "^6.9.1"
+    "immutable": "^3.8.1"
   },
   "devDependencies": {
     "babel-eslint": "^6.0.4",
