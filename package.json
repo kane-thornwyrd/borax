@@ -1,9 +1,14 @@
 {
   "name": "borax",
-  "version": "0.0.6",
-  "description": "Primitive flux in Backbone",
-  "main": "lib/borax.min.js",
-  "homepage": "https://github.com/kane-thornwyrd/borax",
+  "version": "2.0.0",
+  "author": {
+    "name": "Jean-cédric THEROND",
+    "email": "jean.cedric.t@gmail.com"
+  },
+  "license": "GPL-3.0",
+  "description": "A kind of flux",
+  "main": "src/borax.js",
+  "homepage": "https://kane-thornwyrd.github.io/borax",
   "bugs": {
     "url": "https://github.com/kane-thornwyrd/borax/issues"
   },
@@ -11,33 +16,62 @@
     "type": "git",
     "url": "https://github.com/kane-thornwyrd/borax.git"
   },
+  "scripts": {
+    "build": "rimraf lib && webpack --display-modules --display-chunks",
+    "doc": "docco -o doc -- src/*.js",
+    "fulltest": "npm run build && npm test",
+    "lint": "eslint src/*.js",
+    "test": "npm run lint && rimraf coverage && istanbul cover --print both _mocha -- --compilers coffee:coffee-script/register --reporter spec tests",
+    "watch:doc": "chokidar 'src/*.js' -c 'npm run doc'",
+    "watch:fulltest": "chokidar 'tests/*.coffee' 'src/*.js' -c 'npm run fulltest'",
+    "watch:tests": "chokidar 'tests/*.coffee' -c 'npm test'",
+    "watch:build": "chokidar 'src/*.js' -c 'npm run build'"
+  },
   "dependencies": {
-    "backbone": "^1.3.2",
-    "jquery": "^2.2.2",
-    "underscore": "^1.8.3"
+    "immutable": "^3.8.1",
+    "babel-polyfill": "^6.9.1"
   },
   "devDependencies": {
+    "babel-eslint": "^6.0.4",
+    "babel-loader": "^6.2.4",
+    "babel-plugin-transform-member-expression-literals": "^6.8.0",
+    "babel-plugin-transform-merge-sibling-variables": "^6.8.0",
+    "babel-plugin-transform-minify-booleans": "^6.8.0",
+    "babel-plugin-transform-object-assign": "^6.8.0",
+    "babel-plugin-transform-property-literals": "^6.8.0",
+    "babel-plugin-transform-remove-console": "^6.8.0",
+    "babel-plugin-transform-strict-mode": "^6.8.0",
+    "babel-preset-es2015": "~6.3.13",
+    "babel-preset-stage-0": "^6.5.0",
+    "babel-preset-stage-1": "^6.5.0",
+    "babel-preset-stage-2": "^6.5.0",
+    "babel-preset-stage-3": "^6.5.0",
+    "babelify": "^7.3.0",
+    "browserify": "^13.0.1",
     "chai": "^2.0.0",
+    "chalk": "^1.1.3",
+    "chokidar-cli": "*",
     "coffee-script": "^1.9.0",
     "coveralls": "^2.11.2",
     "docco": "^0.7.0",
+    "eslint": "^2.11.1",
+    "gulp": "^3.9.1",
+    "gulp-babel": "^6.1.2",
+    "gulp-cli": "^1.2.1",
+    "gulp-rename": "^1.2.2",
+    "gulp-sourcemaps": "^1.6.0",
+    "gulp-uglify": "^1.5.3",
+    "gulp-util": "^3.0.7",
     "istanbul": "^0.3.8",
     "mocha": "^2.1.0",
+    "rimraf": "^2.5.2",
     "sinon": "^1.17.3",
     "sinon-chai": "^2.8.0",
-    "uglify-js": "^2.6.2"
+    "utils-merge": "^1.0.0",
+    "vinyl-buffer": "^1.0.0",
+    "vinyl-source-stream": "^1.1.0",
+    "watchify": "^3.7.0",
+    "webpack": "^1.13.1"
   },
-  "scripts": {
-    "postinstall": "npm install -g mocha istanbul uglify-js docco chokidar-cli",
-    "watch-tests": "chokidar 'tests/*.coffee' 'lib/*.js' -c 'npm test'",
-    "watch-doc": "chokidar 'src/*.js' -c './node_modules/docco/bin/docco -o doc -t ./docco-theme/docco.jst -c ./docco-theme/docco.css src/*.js'",
-    "watch-js": "chokidar 'src/*.js' -c 'uglify -s src/*.js -o lib/borax.min.js'",
-    "test": "istanbul cover --print both node_modules/mocha/bin/_mocha -- --compilers coffee:coffee-script/register --reporter spec tests"
-  },
-  "author": {
-    "name": "Jean-cédric THEROND",
-    "email": "jean.cedric.t@gmail.com"
-  },
-  "license": "GPL-3.0",
   "readmeFilename": "README.md"
 }

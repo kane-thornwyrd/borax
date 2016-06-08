@@ -1,0 +1,6 @@
+*.log
+.*
+coverage
+tests
+tmp
+doc

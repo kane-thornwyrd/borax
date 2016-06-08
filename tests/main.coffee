@@ -1,51 +1,56 @@
-inside = (what, from)=>
-  if typeof window isnt 'undefined'
-    window[what] = from
-  else
-    global[what] = from
-we = (obj)-> obj
-load = (thing)=> inside thing, we require thing
-
 getARandomString = -> Math.random().toString(36).replace(/[^a-zA-Z]+/g, '')
 
-inside 'sinonChai', we require 'sinon-chai'
+global.Immutable = require 'immutable'
+borax = require '../lib/borax'
 
-require 'bluebird'
+sinon = require 'sinon'
+sinonChai = require 'sinon-chai'
+chai = require 'chai'
 
-inside '_', we require 'underscore'
-inside '$', we require 'jquery'
-inside 'Backbone', we require 'backbone'
-
-require '../lib/borax.min'
-
-load 'sinon'
-
-load('chai').should()
-
+chai.should()
 chai.use sinonChai
 
-describe 'The Dispatcher', ->
+console.log Borax.Datastore.getState()
 
-  it 'should be always the same instance !', ->
-    Backbone.Dispatcher.should.be.deep.equal Backbone.Dispatcher
+describe 'The test environment', ->
+  it 'should work', ->
+    true.should.be.equal true
 
-  it 'should allow to register callbacks and trigger events', ->
-    spy = sinon.spy()
-    Backbone.Dispatcher.on 'test', spy
-    Backbone.Dispatcher.trigger 'test'
-    spy.should.have.been.called
+describe 'The Datastore', ->
+  it 'should exist', ->
+    Borax.should.have.property('Datastore')
+
+  it 'should have a getState method', ->
+    Borax.Datastore.should.have.property('getState')
+    Borax.Datastore.getState.should.be.a('function')
+
+  it 'should have a getState method that return an Immutable.Map', ->
+    Borax.Datastore.getState().should.be.an.instanceof(Immutable.Map)
+
+  it 'should have a getState method that return an empty Immutable.Map', ->
+    Borax.Datastore.getState().size.should.be.equal(0)
 
 
-  it 'should allow to register callbacks and trigger events in any order toward the triggering', ->
-    spy2 = sinon.spy()
-    Backbone.Dispatcher.trigger 'test2'
-    Backbone.Dispatcher.on('test2', spy2)
-    spy2.should.have.been.called
+  # it 'should be always the same instance !', ->
+  #   Backbone.Dispatcher.should.be.deep.equal Backbone.Dispatcher
 
-  it 'should allow to register callbacks using once in any order toward the triggering', ->
-    spy3 = sinon.spy()
-    Backbone.Dispatcher.trigger 'test3'
-    Backbone.Dispatcher.once('test3', spy3)
-    Backbone.Dispatcher.trigger 'test3'
-    Backbone.Dispatcher.trigger 'test3'
-    spy3.should.have.been.callCount 1
+  # it 'should allow to register callbacks and trigger events', ->
+  #   spy = sinon.spy()
+  #   Backbone.Dispatcher.on 'test', spy
+  #   Backbone.Dispatcher.trigger 'test'
+  #   spy.should.have.been.called
+
+
+  # it 'should allow to register callbacks and trigger events in any order toward the triggering', ->
+  #   spy2 = sinon.spy()
+  #   Backbone.Dispatcher.trigger 'test2'
+  #   Backbone.Dispatcher.on('test2', spy2)
+  #   spy2.should.have.been.called
+
+  # it 'should allow to register callbacks using once in any order toward the triggering', ->
+  #   spy3 = sinon.spy()
+  #   Backbone.Dispatcher.trigger 'test3'
+  #   Backbone.Dispatcher.once('test3', spy3)
+  #   Backbone.Dispatcher.trigger 'test3'
+  #   Backbone.Dispatcher.trigger 'test3'
+  #   spy3.should.have.been.callCount 1
