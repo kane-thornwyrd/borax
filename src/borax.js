@@ -5,7 +5,7 @@
 // Check the "Jump to ..." menu above &#x2197;
 //
 //
-import Datastore from './datastore';
+let Datastore = require('./datastore');
 
 
 if(typeof window !== 'undefined') global = window;

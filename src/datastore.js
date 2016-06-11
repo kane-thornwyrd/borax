@@ -1,5 +1,5 @@
 // # Datastore
-import Immutable from 'immutable';
+let Immutable = require('immutable');
 
 // Let's assume that 100 entries are enougth history...
 const HISTORY_MAX_LENGTH = 100;
@@ -119,9 +119,9 @@ class Datastore {
   // * **@param**  {Number}  id from the callback to remove.
   // * **@return** {Number}  new listener's array length.
   //
-  //  ```js
+  // ```js
   //  //@ToDo
-  //  ```
+  // ```
   offNewState(id){
     if(this.cbs.length-1 < id) this.cbs.splice(id, 1);
     return this.cbs.length;
