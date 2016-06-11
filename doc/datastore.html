@@ -119,9 +119,7 @@ data it will reduce from the state.</li>
 <li><strong>@param</strong>  {Function} cb for the reducer.</li>
 <li><strong>@chainable</strong></li>
 </ul>
-<pre><code class="lang-js"> <span class="hljs-keyword">let</span> ds = Borax.Datastore;
-
- ds.registerReducer(<span class="hljs-string">'foo'</span>,(state = {}, action)=&gt;{
+<pre><code class="lang-js"> <span class="hljs-built_in">require</span>(<span class="hljs-string">'borax'</span>).Datastore.registerReducer(<span class="hljs-string">'foo'</span>,(state = {}, action)=&gt;{
    <span class="hljs-keyword">switch</span>(action.type){
      <span class="hljs-keyword">case</span> <span class="hljs-string">'START'</span>:
        <span class="hljs-keyword">return</span> {start: <span class="hljs-built_in">Date</span>.now()};
@@ -156,11 +154,11 @@ data it will reduce from the state.</li>
 <li><strong>@param</strong>  {Number} away (optionnal) how far from the latest, default: 0</li>
 <li><strong>@return</strong> {Immutable.Map}      The state requested.</li>
 </ul>
-<pre><code class="lang-js"> <span class="hljs-keyword">let</span> ds = Borax.Datastore;
+<pre><code class="lang-js"> <span class="hljs-keyword">let</span> { Datastore } = <span class="hljs-built_in">require</span>(<span class="hljs-string">'borax'</span>);
 
- <span class="hljs-keyword">let</span> currentState = ds.getState();
+ <span class="hljs-keyword">let</span> currentState = Datastore.getState();
 
- <span class="hljs-keyword">let</span> antepenultimateState = ds.getState(<span class="hljs-number">2</span>);
+ <span class="hljs-keyword">let</span> antepenultimateState = Datastore.getState(<span class="hljs-number">2</span>);
 </code></pre>
 
             </div>
@@ -182,14 +180,14 @@ data it will reduce from the state.</li>
 <p>Call all the reducers for them to alter the app state then forge the new one.</p>
 <p>Also garbage collect the history to avoid pseudo-“memory leak”.</p>
 <ul>
-<li><strong>@param</strong>  {[type]} action [description]</li>
+<li><strong>@param</strong>  {Object} action [description]</li>
 <li><strong>@chainable</strong></li>
 </ul>
-<pre><code class="lang-js"> <span class="hljs-keyword">let</span> ds = Borax.Datastore;
+<pre><code class="lang-js"> <span class="hljs-keyword">let</span> { Datastore } = <span class="hljs-built_in">require</span>(<span class="hljs-string">'borax'</span>);
 
  $.ajax(<span class="hljs-string">'exemple.com/data.json'</span>)
    .then((data)=&gt;{
-     ds.dispatch(
+     Datastore.dispatch(
        <span class="hljs-built_in">require</span>(<span class="hljs-string">'../actions/foo/dataRetrieved'</span>)(data)
      );
    })
@@ -281,6 +279,7 @@ data it will reduce from the state.</li>
                 <a class="pilcrow" href="#section-12">&#182;</a>
               </div>
               <h2 id="onnewstate">onNewstate</h2>
+<p>Register a listener to the event of a new state being created.</p>
 <ul>
 <li><strong>@param</strong>  {Function} cb to register as listener.</li>
 <li><strong>@return</strong> {Number}      id from the new listener.</li>
@@ -306,6 +305,7 @@ data it will reduce from the state.</li>
                 <a class="pilcrow" href="#section-13">&#182;</a>
               </div>
               <h2 id="offnewstate">offNewstate</h2>
+<p>Unregister a listener.</p>
 <ul>
 <li><strong>@param</strong>  {Number}  id from the callback to remove.</li>
 <li><p><strong>@return</strong> {Number}  new listener’s array length.</p>
@@ -319,27 +319,13 @@ data it will reduce from the state.</li>
             <div class="content"><div class='highlight'><pre>  offNewState(id){
     <span class="hljs-keyword">if</span>(<span class="hljs-keyword">this</span>.cbs.length<span class="hljs-number">-1</span> &lt; id) <span class="hljs-keyword">this</span>.cbs.splice(id, <span class="hljs-number">1</span>);
     <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.cbs.length;
-  }</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-14">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-14">&#182;</a>
-              </div>
-              <h2 id="trigger">trigger</h2>
-<ul>
-<li><strong>@chainable</strong></li>
-</ul>
-<pre><code class="lang-js"> <span class="hljs-comment">//@ToDo</span>
-</code></pre>
+  }
 
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>  trigger(){
+  <span class="hljs-comment">/**
+   * Used internally to trigger all the listeners.
+   * @chainable
+   */</span>
+  trigger(){
     <span class="hljs-keyword">let</span> state = <span class="hljs-keyword">this</span>.getState();
     <span class="hljs-keyword">let</span> notify = (cb)=&gt;{
       <span class="hljs-keyword">return</span> cb(state);

@@ -23,9 +23,7 @@ class Datastore {
   // * **@chainable**
   //
   // ```js
-  //  let ds = Borax.Datastore;
-  //
-  //  ds.registerReducer('foo',(state = {}, action)=>{
+  //  require('borax').Datastore.registerReducer('foo',(state = {}, action)=>{
   //    switch(action.type){
   //      case 'START':
   //        return {start: Date.now()};
@@ -48,11 +46,11 @@ class Datastore {
   // * **@return** {Immutable.Map}      The state requested.
   //
   // ```js
-  //  let ds = Borax.Datastore;
+  //  let { Datastore } = require('borax');
   //
-  //  let currentState = ds.getState();
+  //  let currentState = Datastore.getState();
   //
-  //  let antepenultimateState = ds.getState(2);
+  //  let antepenultimateState = Datastore.getState(2);
   // ```
   getState(away = 0){
     return this.history[this.history.length-1-away];
@@ -63,15 +61,15 @@ class Datastore {
   //
   // Also garbage collect the history to avoid pseudo-"memory leak".
   //
-  // * **@param**  {[type]} action [description]
+  // * **@param**  {Object} action [description]
   // * **@chainable**
   //
   // ```js
-  //  let ds = Borax.Datastore;
+  //  let { Datastore } = require('borax');
   //
   //  $.ajax('exemple.com/data.json')
   //    .then((data)=>{
-  //      ds.dispatch(
+  //      Datastore.dispatch(
   //        require('../actions/foo/dataRetrieved')(data)
   //      );
   //    })
@@ -101,6 +99,8 @@ class Datastore {
   }
 
   // ## onNewstate
+  // Register a listener to the event of a new state being created.
+  //
   // * **@param**  {Function} cb to register as listener.
   // * **@return** {Number}      id from the new listener.
   //
@@ -114,6 +114,8 @@ class Datastore {
   }
 
   // ## offNewstate
+  // Unregister a listener.
+  //
   // * **@param**  {Number}  id from the callback to remove.
   // * **@return** {Number}  new listener's array length.
   //
@@ -125,13 +127,10 @@ class Datastore {
     return this.cbs.length;
   }
 
-
-  // ## trigger
-  // * **@chainable**
-  //
-  // ```js
-  //  //@ToDo
-  // ```
+  /**
+   * Used internally to trigger all the listeners.
+   * @chainable
+   */
   trigger(){
     let state = this.getState();
     let notify = (cb)=>{
