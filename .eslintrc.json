@@ -6,10 +6,12 @@
       "impliedStrict": true
     }
   },
+  "env": {
+    "browser": true,
+    "mocha": true,
+    "node": true
+  },
   "rules": {
     "semi": 2
-  },
-  "env": {
-    "browser": false
   }
 }

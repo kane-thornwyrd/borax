@@ -5,10 +5,7 @@
 // Check the "Jump to ..." menu above &#x2197;
 //
 //
-let Datastore = require('./datastore');
-
-
-if(typeof window !== 'undefined') global = window;
+import Datastore from './datastore';
 
 
 global.Borax = module.exports = {
