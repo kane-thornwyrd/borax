@@ -8,3 +8,13 @@ Another kind of flux...
 [![Coveralls](https://img.shields.io/badge/stability-unstable-red.svg?maxAge=2592000?style=flat-square)]()
 
 [![NPM](https://nodei.co/npm/borax.png?downloads=true&downloadRank=true&stars=true)](https://nodei.co/npm/borax/)
+
+## Installation
+Borax is Isomorphic, therefor:
+### Client-side, you can choose to:
+  - [Download the latest release](https://github.com/kane-thornwyrd/borax/releases) then use the dist/borax file you prefer (.js or .min.js).
+  - Use [Rawgit](https://rawgit.com/) to include a tag in your file like this one: ```<script src="https://raw.githubusercontent.com/kane-thornwyrd/borax/master/dist/borax.min.js"></script>```.
+  - ```npm install borax``` then use it as you wish, because it work with both CommonJS based solutions as well with the AMD-based ones.
+
+### Server-side
+  - ```npm install borax``` then require it whereever you need.
