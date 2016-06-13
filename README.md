@@ -20,4 +20,4 @@ Borax is Isomorphic, therefor:
   - ```npm install borax``` then require it whereever you need.
 
 ## Exemple usage
-__ToDo__
+[https://github.com/kane-thornwyrd/borax-exemple/tree/master/app](https://github.com/kane-thornwyrd/borax-exemple/tree/master/app)
